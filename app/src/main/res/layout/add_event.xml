@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="4dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="4dp"
+    android:background="#ffeeeeee"
+    android:orientation="vertical"
+    android:paddingEnd="6dp"
+    android:paddingStart="6dp">
+
+    <TextView
+        android:id="@+id/startLabel"
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="0"
+        android:text="Start Address:"
+        android:textSize="8pt" />
+
+    <EditText
+        android:id="@+id/startAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="0"
+        android:ems="10"
+        android:inputType="textPostalAddress" />
+
+    <TextView
+        android:id="@+id/destinationLabel"
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="1"
+        android:text="Destination Address:"
+        android:textSize="8pt" />
+
+    <EditText
+        android:id="@+id/destinationAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_column="1"
+        android:layout_row="1"
+        android:ems="10"
+        android:inputType="textPostalAddress" />
+
+    <TextView
+        android:id="@+id/howOften"
+        android:layout_width="183dp"
+        android:layout_height="wrap_content"
+        android:layout_column="0"
+        android:layout_row="2"
+        android:text="How often?"
+        android:textSize="8pt" />
+
+    <LinearLayout>
+        <EditText
+            android:id="@+id/numTimes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:ems="10"/>
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_column="1"
+            android:layout_row="2"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+
+</GridLayout>

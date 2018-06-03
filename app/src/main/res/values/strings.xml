@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">KmCounterAndroid</string>
+    <string name="action_settings">Settings</string>
+    <string name="name">Name</string>
+    <string-array name="names">
+        <item>Week</item>
+        <item>Month</item>
+        <item>Year</item>
+    </string-array>
+</resources>
