@@ -34,22 +34,15 @@
 
     <TableLayout
         android:layout_marginTop="10dp"
-        android:id="@+id/table_layout"
+        android:id="@+id/table_header_layout"
         android:layout_below="@id/homeTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <!--<View-->
-            <!--android:layout_height="3dip"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:background="#686868"-->
-            <!--android:id="@+id/rowDivider"/>-->
-
         <TableRow
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="@drawable/row_background"
-            android:padding="5dp">
+            android:background="@drawable/row_background">
 
             <TextView
                 android:id="@+id/name"
@@ -64,10 +57,6 @@
                 android:gravity="center"
                 android:padding="7dp"
                 android:background="@drawable/cell_background"/>
-            <!--<View-->
-                <!--android:layout_height="35dp"-->
-                <!--android:layout_width="3dip"-->
-                <!--android:background="#686868" />-->
 
             <TextView
                 android:id="@+id/age"
@@ -82,15 +71,10 @@
                 android:gravity="center"
                 android:padding="7dp"
                 android:background="@drawable/cell_background"/>
-            <!--<View-->
-                <!--android:layout_height="35dp"-->
-                <!--android:layout_width="3dip"-->
-                <!--android:background="#686868"/>-->
 
             <TextView
                 android:textColor="#000"
                 android:id="@+id/position"
-                android:fontFamily="serif"
                 android:layout_weight="1"
                 android:text="End"
                 android:textSize="15dp"
@@ -100,14 +84,9 @@
                 android:gravity="center"
                 android:padding="7dp"
                 android:background="@drawable/cell_background"/>
-            <!--<View-->
-                <!--android:layout_height="35dp"-->
-                <!--android:layout_width="3dp"-->
-                <!--android:background="#686868"/>-->
             <TextView
                 android:textColor="#000"
                 android:id="@+id/address"
-                android:fontFamily="serif"
                 android:layout_weight="1"
                 android:text="Km/Year"
                 android:textSize="15dp"
@@ -118,12 +97,26 @@
                 android:padding="7dp"
                 android:background="@drawable/cell_background"/>
         </TableRow>
-        <!--<View-->
-            <!--android:layout_height="3dp"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:background="#686868"/>-->
 
     </TableLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scrollbars="horizontal"
+        android:layout_weight="1"
+        android:layout_below="@id/table_header_layout">
+
+        <TableLayout
+            android:id="@+id/table_body_layout"
+            android:layout_below="@id/table_header_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </ScrollView>
+
+
+
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

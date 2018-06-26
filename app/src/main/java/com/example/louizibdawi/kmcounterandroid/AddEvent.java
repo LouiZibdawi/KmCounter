@@ -62,7 +62,6 @@ public class AddEvent extends AppCompatActivity
 
     //Vars
     private PlaceAutocompleteAdapter addressAdapter;
-    private PlaceAutocompleteAdapter2 addressAdapter2;
     private GeoDataClient mGeoDataClient;
     private Geocoder geocoder;
     private final String USER_AGENT = "Mozilla/5.0";
@@ -143,19 +142,8 @@ public class AddEvent extends AppCompatActivity
 
         addressAdapter = new PlaceAutocompleteAdapter(AddEvent.this, mGeoDataClient, LAT_LNG_BOUNDS, null);
 
-//        mGoogleApiClient = new GoogleApiClient.Builder(this)
-//                .enableAutoManage(this, GOOGLE_API_CLIENT_ID /* clientId */, this)
-//                .addApi(Places.GEO_DATA_API)
-//                .addApi(Places.PLACE_DETECTION_API)
-//                .build();
-//
-//        addressAdapter2 = new PlaceAutocompleteAdapter2(AddEvent.this,
-//                android.R.layout.simple_list_item_1, mGoogleApiClient, LAT_LNG_BOUNDS, null);
-
         startAddress.setAdapter(addressAdapter);
-        //startAddress.setAdapter(addressAdapter2);
         endAddress.setAdapter(addressAdapter);
-        //endAddress.setAdapter(addressAdapter2);
 
     }
 
@@ -166,7 +154,7 @@ public class AddEvent extends AppCompatActivity
         String urlStr = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + startStr
                 + "&destinations=" + endStr + "&key=" + API_KEY;
 
-        //System.out.println("URL: " + urlStr);
+        System.out.println("URL: " + urlStr);
 
         try {
             new JSONTask().execute(urlStr).get();
@@ -181,11 +169,11 @@ public class AddEvent extends AppCompatActivity
             numKmsPerTrip = numKmsPerTrip * 2;
         }
 
-        //System.out.println("Total kms is " + numKmsPerTrip);
+        System.out.println("Total kms is " + numKmsPerTrip);
     }
 
     private void getNumKmsPerYear(int numTimes, int weekMonthYear) {
-        double totalTimes = 0;
+        double totalTimes = 1;
         switch(weekMonthYear) {
             case 0: //"Week"
                 totalTimes = numTimes * 52.1429;
@@ -194,6 +182,7 @@ public class AddEvent extends AppCompatActivity
                 totalTimes = numTimes * 12;
                 break;
             case 2: //"Year"
+                totalTimes = numTimes;
                 break;
             default:
                 break;
@@ -201,7 +190,7 @@ public class AddEvent extends AppCompatActivity
 
         numKmsPerYear = totalTimes * numKmsPerTrip;
 
-        //System.out.println("Total kms per year " + numKmsPerYear);
+        System.out.println("Total kms per year " + numKmsPerYear);
     }
 
     //JSONTask

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -38,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout relativeLayoutA;
 
     private TableLayout tableLayout;
-
     private TableRow tableRow;
+
+    private VerticalScroll scrollViewD;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+//        scrollViewD= new VerticalScroll(getApplicationContext());
+//        scrollViewD.setPadding(0,0,0,0);
+//        scrollViewD.setLayoutParams(new ViewGroup.LayoutParams(SCREEN_WIDTH, SCREEN_HEIGHT - (SCREEN_HEIGHT/20) ));
+
+        tableLayout = (TableLayout) findViewById(R.id.table_body_layout);
+//        tableLayout.addView(scrollViewD);
+//
+//        scrollViewD.setScrollViewListener(this);
 
         //Reseting Db
         //MyDb.resetRB(this);
@@ -99,15 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
     private synchronized void addRowToTable(int pos, EventDb.EventRecord event) {
 
-        //Initializing table layout
-        tableLayout = (TableLayout) findViewById(R.id.table_layout);
-
         //Initializing Row
         TableRow tr = new TableRow(this);
         TableRow.LayoutParams lp = new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT,
                 1.0f);
         tr.setLayoutParams(lp);
+        tr.setBackground(ContextCompat.getDrawable(this, R.drawable.row_background));
 
         //Creating columns
         TextView name = createColumn(event.name, lp);
@@ -115,33 +124,11 @@ public class MainActivity extends AppCompatActivity {
         TextView end = createColumn(event.end, lp);
         TextView kms = createColumn(Integer.toString(event.kpy), lp);
 
-        //Initializing Horizontal lines
-        View rowDivider = new View(this);
-        rowDivider.setLayoutParams(new ViewGroup.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
-        rowDivider.setBackgroundColor(Color.parseColor("#686868"));
-
-        //Initializing Verticle lines
-        View columnDivider = new View(this);
-        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
-        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
-
-        View columnDivider2 = new View(this);
-        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
-        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
-
-        View columnDivider3 = new View(this);
-        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
-        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
-
         //Adding columns to row
         tr.addView(name);
-        tr.addView(columnDivider);
         tr.addView(start);
-        tr.addView(columnDivider2);
         tr.addView(end);
-        tr.addView(columnDivider3);
         tr.addView(kms);
-        tr.addView(rowDivider);
 
         this.tableLayout.addView(tr);
     }
@@ -153,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         tv.setText(text);
         tv.setTextSize(15);
         tv.setEms(2);
-        tv.setGravity(Gravity.CENTER );
+        tv.setGravity(Gravity.CENTER);
         tv.setMaxLines(3);
         tv.setEllipsize(TextUtils.TruncateAt.END);
 
