@@ -22,6 +22,104 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/homeTitle"
+        android:layout_below="@id/appBar"
+        android:gravity="center"
+        android:text="Your Events"
+        android:textSize="30dp"
+        android:textStyle="bold"/>
+
+    <TableLayout
+        android:layout_marginTop="10dp"
+        android:id="@+id/table_layout"
+        android:layout_below="@id/homeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <View
+            android:layout_height="3dip"
+            android:layout_width="match_parent"
+            android:background="#686868"
+            android:id="@+id/rowDivider"/>
+
+        <TableRow
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:background="#A8A8A8">
+
+            <TextView
+                android:id="@+id/name"
+                android:fontFamily="serif"
+                android:layout_weight="1"
+                android:textColor="#000"
+                android:text="Name"
+                android:textSize="15dp"
+                android:ems="2"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"/>
+            <View
+                android:layout_height="35dp"
+                android:layout_width="3dip"
+                android:background="#686868" />
+
+            <TextView
+                android:id="@+id/age"
+                android:textColor="#000"
+                android:fontFamily="serif"
+                android:layout_weight="1"
+                android:text="Age"
+                android:textSize="15dp"
+                android:ems="2"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"/>
+            <View
+                android:layout_height="35dp"
+                android:layout_width="3dip"
+                android:background="#686868"/>
+
+            <TextView
+                android:textColor="#000"
+                android:id="@+id/position"
+                android:fontFamily="serif"
+                android:layout_weight="1"
+                android:text="Position"
+                android:textSize="15dp"
+                android:ems="2"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"/>
+            <View
+                android:layout_height="35dp"
+                android:layout_width="3dp"
+                android:background="#686868"/>
+            <TextView
+                android:textColor="#000"
+                android:id="@+id/address"
+                android:fontFamily="serif"
+                android:layout_weight="1"
+                android:text="Location"
+                android:textSize="15dp"
+                android:ems="2"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:layout_gravity="center_vertical"/>
+        </TableRow>
+        <View
+            android:layout_height="3dp"
+            android:layout_width="match_parent"
+            android:background="#686868"/>
+
+    </TableLayout>
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"

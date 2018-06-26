@@ -2,16 +2,19 @@ package com.example.louizibdawi.kmcounterandroid;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
@@ -44,12 +47,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        relativeLayoutMain= (RelativeLayout)findViewById(R.id.relativeLayoutMain);
-        getScreenDimension();
-        initializeRelativeLayout();
-        initializeTableLayout();
-
-
         //Reseting Db
         //MyDb.resetRB(this);
         db = MyDb.getDB(this);
@@ -63,31 +60,6 @@ public class MainActivity extends AppCompatActivity {
                 addEventPage();
             }
         });
-    }
-
-    private void initializeRelativeLayout() {
-        relativeLayoutA= new RelativeLayout(getApplicationContext());
-        relativeLayoutA.setId(R.id.relativeLayoutA);
-        relativeLayoutA.setPadding(0,0,0,0);
-
-        RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams(
-                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
-
-        layoutParams.addRule(RelativeLayout.BELOW, R.id.appBar);
-
-        relativeLayoutA.setLayoutParams(layoutParams);
-
-        this.relativeLayoutMain.addView(relativeLayoutA);
-    }
-
-    private void initializeTableLayout() {
-        tableLayout = new TableLayout(getApplicationContext());
-        tableLayout.setPadding(0,10,0,0);
-        TableLayout.LayoutParams layoutParamsTableLayoutA= new TableLayout.LayoutParams(
-                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
-        tableLayout.setLayoutParams(layoutParamsTableLayoutA);
-        tableLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        this.relativeLayoutA.addView(tableLayout);
     }
 
     private void getScreenDimension(){
@@ -116,66 +88,76 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayEvents() {
         List<EventDb.EventRecord> events = db.getEvents();
-        int i = 0;
+        int i = 3;
         for(EventDb.EventRecord event : events) {
             addRowToTable(i, event);
             i=i+1;
         }
     }
 
-//    private synchronized void addColumnToRow(int rowPos, String text) {
-//        TableRow tableRowAdd= (TableRow) this.tableLayout.getChildAt(rowPos);
-//        tableRow = new TableRow(getApplicationContext());
-//        TableRow.LayoutParams layoutParamsTableRow= new TableRow.LayoutParams(
-//                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
-//        tableRow.setPadding(3,3,3,4);
-//        tableRow.setBackground(getResources().getDrawable(R.drawable.cellbackground));
-//        tableRow.setLayoutParams(layoutParamsTableRow);
-//
-//        TextView label_date = new TextView(getApplicationContext());
-//
-//        label_date.setText(text);
-//        label_date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-//        tableRow.setTag(label_date);
-//        this.tableRow.addView(label_date);
-//
-//        tableRowAdd.addView(tableRow);
-//        this.tableLayout.addView(tableRow, pos);
-//    }
 
     private synchronized void addRowToTable(int pos, EventDb.EventRecord event) {
-        tableRow= new TableRow(getApplicationContext());
-        TableRow.LayoutParams layoutParamsTableRow= new TableRow.LayoutParams(
-                (int)(SCREEN_WIDTH/1.2), SCREEN_HEIGHT/20);
-        tableRow.setPadding(3,3,3,4);
-        tableRow.setBackground(getResources().getDrawable(R.drawable.cellbackground));
-        tableRow.setLayoutParams(layoutParamsTableRow);
 
-        //Adding columns
-        TextView name=new TextView(this.getApplicationContext());
-        TextView start=new TextView(this.getApplicationContext());
-        TextView end=new TextView(this.getApplicationContext());
-        TextView kms=new TextView(this.getApplicationContext());
+        //Initializing table layout
+        tableLayout = (TableLayout) findViewById(R.id.table_layout);
 
-        name.setText(event.name);
-        name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        name.setMaxWidth(200);
-        tableRow.addView(name);
-        start.setText(event.start);
-        start.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        start.setMaxWidth(500);
-        tableRow.addView(start);
-        end.setText(event.end);
-        end.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        end.setMaxWidth(500);
-        tableRow.addView(end);
-        kms.setText(Integer.toString(event.kpy));
-        kms.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        kms.setMaxWidth(100);
-        tableRow.addView(kms);
+        //Initializing Row
+        TableRow tr = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT,
+                1.0f);
+        tr.setLayoutParams(lp);
 
+        //Creating columns
+        TextView name = createColumn(event.name, lp);
+        TextView start = createColumn(event.start, lp);
+        TextView end = createColumn(event.end, lp);
+        TextView kms = createColumn(Integer.toString(event.kpy), lp);
 
-        this.tableLayout.addView(tableRow, pos);
+//        //Initializing Horizontal lines
+//        View rowDivider = new View(this);
+//        rowDivider.setLayoutParams(new ViewGroup.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
+//        rowDivider.setBackgroundColor(Color.parseColor("#686868"));
+//
+//        //Initializing Verticle lines
+//        View columnDivider = new View(this);
+//        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
+//        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
+//
+//        View columnDivider2 = new View(this);
+//        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
+//        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
+//
+//        View columnDivider3 = new View(this);
+//        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
+//        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
+
+        //Adding columns to row
+        tr.addView(name);
+//        tr.addView(columnDivider);
+        tr.addView(start);
+//        tr.addView(columnDivider2);
+        tr.addView(end);
+//        tr.addView(columnDivider3);
+        tr.addView(kms);
+//        tr.addView(rowDivider);
+
+        this.tableLayout.addView(tr);
+    }
+
+    private TextView createColumn(String text, TableRow.LayoutParams lp) {
+
+        TextView tv = new TextView(this);
+        tv.setLayoutParams(lp);
+        tv.setBackgroundColor(Color.WHITE);
+        tv.setFontFeatureSettings("serif");
+        tv.setText(text);
+        tv.setTextSize(15);
+        tv.setEms(2);
+        tv.setMaxLines(3);
+        tv.setEllipsize(TextUtils.TruncateAt.END);
+
+        return tv;
     }
 
     @Override
