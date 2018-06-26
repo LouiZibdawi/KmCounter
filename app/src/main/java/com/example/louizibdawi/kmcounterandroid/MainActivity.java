@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -114,33 +115,33 @@ public class MainActivity extends AppCompatActivity {
         TextView end = createColumn(event.end, lp);
         TextView kms = createColumn(Integer.toString(event.kpy), lp);
 
-//        //Initializing Horizontal lines
-//        View rowDivider = new View(this);
-//        rowDivider.setLayoutParams(new ViewGroup.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
-//        rowDivider.setBackgroundColor(Color.parseColor("#686868"));
-//
-//        //Initializing Verticle lines
-//        View columnDivider = new View(this);
-//        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
-//        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
-//
-//        View columnDivider2 = new View(this);
-//        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
-//        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
-//
-//        View columnDivider3 = new View(this);
-//        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
-//        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
+        //Initializing Horizontal lines
+        View rowDivider = new View(this);
+        rowDivider.setLayoutParams(new ViewGroup.LayoutParams(3, ViewGroup.LayoutParams.MATCH_PARENT));
+        rowDivider.setBackgroundColor(Color.parseColor("#686868"));
+
+        //Initializing Verticle lines
+        View columnDivider = new View(this);
+        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
+        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
+
+        View columnDivider2 = new View(this);
+        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
+        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
+
+        View columnDivider3 = new View(this);
+        columnDivider.setLayoutParams(new ViewGroup.LayoutParams(35, 3));
+        columnDivider.setBackgroundColor(Color.parseColor("#686868"));
 
         //Adding columns to row
         tr.addView(name);
-//        tr.addView(columnDivider);
+        tr.addView(columnDivider);
         tr.addView(start);
-//        tr.addView(columnDivider2);
+        tr.addView(columnDivider2);
         tr.addView(end);
-//        tr.addView(columnDivider3);
+        tr.addView(columnDivider3);
         tr.addView(kms);
-//        tr.addView(rowDivider);
+        tr.addView(rowDivider);
 
         this.tableLayout.addView(tr);
     }
@@ -149,11 +150,10 @@ public class MainActivity extends AppCompatActivity {
 
         TextView tv = new TextView(this);
         tv.setLayoutParams(lp);
-        tv.setBackgroundColor(Color.WHITE);
-        tv.setFontFeatureSettings("serif");
         tv.setText(text);
         tv.setTextSize(15);
         tv.setEms(2);
+        tv.setGravity(Gravity.CENTER );
         tv.setMaxLines(3);
         tv.setEllipsize(TextUtils.TruncateAt.END);
 

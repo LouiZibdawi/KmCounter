@@ -39,84 +39,89 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <View
-            android:layout_height="3dip"
-            android:layout_width="match_parent"
-            android:background="#686868"
-            android:id="@+id/rowDivider"/>
+        <!--<View-->
+            <!--android:layout_height="3dip"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:background="#686868"-->
+            <!--android:id="@+id/rowDivider"/>-->
 
         <TableRow
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:background="#A8A8A8">
+            android:background="@drawable/row_background"
+            android:padding="5dp">
 
             <TextView
                 android:id="@+id/name"
                 android:fontFamily="serif"
                 android:layout_weight="1"
                 android:textColor="#000"
-                android:text="Name"
+                android:text="Event"
                 android:textSize="15dp"
                 android:ems="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:layout_gravity="center_vertical"/>
-            <View
-                android:layout_height="35dp"
-                android:layout_width="3dip"
-                android:background="#686868" />
+                android:padding="7dp"
+                android:background="@drawable/cell_background"/>
+            <!--<View-->
+                <!--android:layout_height="35dp"-->
+                <!--android:layout_width="3dip"-->
+                <!--android:background="#686868" />-->
 
             <TextView
                 android:id="@+id/age"
                 android:textColor="#000"
                 android:fontFamily="serif"
                 android:layout_weight="1"
-                android:text="Age"
+                android:text="Start"
                 android:textSize="15dp"
                 android:ems="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:layout_gravity="center_vertical"/>
-            <View
-                android:layout_height="35dp"
-                android:layout_width="3dip"
-                android:background="#686868"/>
+                android:padding="7dp"
+                android:background="@drawable/cell_background"/>
+            <!--<View-->
+                <!--android:layout_height="35dp"-->
+                <!--android:layout_width="3dip"-->
+                <!--android:background="#686868"/>-->
 
             <TextView
                 android:textColor="#000"
                 android:id="@+id/position"
                 android:fontFamily="serif"
                 android:layout_weight="1"
-                android:text="Position"
+                android:text="End"
                 android:textSize="15dp"
                 android:ems="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:layout_gravity="center_vertical"/>
-            <View
-                android:layout_height="35dp"
-                android:layout_width="3dp"
-                android:background="#686868"/>
+                android:padding="7dp"
+                android:background="@drawable/cell_background"/>
+            <!--<View-->
+                <!--android:layout_height="35dp"-->
+                <!--android:layout_width="3dp"-->
+                <!--android:background="#686868"/>-->
             <TextView
                 android:textColor="#000"
                 android:id="@+id/address"
                 android:fontFamily="serif"
                 android:layout_weight="1"
-                android:text="Location"
+                android:text="Km/Year"
                 android:textSize="15dp"
                 android:ems="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:layout_gravity="center_vertical"/>
+                android:padding="7dp"
+                android:background="@drawable/cell_background"/>
         </TableRow>
-        <View
-            android:layout_height="3dp"
-            android:layout_width="match_parent"
-            android:background="#686868"/>
+        <!--<View-->
+            <!--android:layout_height="3dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:background="#686868"/>-->
 
     </TableLayout>
 
