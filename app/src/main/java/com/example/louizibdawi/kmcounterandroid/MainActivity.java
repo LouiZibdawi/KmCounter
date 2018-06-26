@@ -18,6 +18,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -31,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private RelativeLayout relativeLayoutMain;
     private RelativeLayout relativeLayoutA;
 
-    private TableLayout tableLayoutA;
+    private TableLayout tableLayout;
 
     private TableRow tableRow;
 
@@ -68,19 +70,24 @@ public class MainActivity extends AppCompatActivity {
         relativeLayoutA.setId(R.id.relativeLayoutA);
         relativeLayoutA.setPadding(0,0,0,0);
 
-        relativeLayoutA.setLayoutParams(new RelativeLayout.LayoutParams(
-                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5)));
+        RelativeLayout.LayoutParams layoutParams= new RelativeLayout.LayoutParams(
+                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
+
+        layoutParams.addRule(RelativeLayout.BELOW, R.id.appBar);
+
+        relativeLayoutA.setLayoutParams(layoutParams);
+
         this.relativeLayoutMain.addView(relativeLayoutA);
     }
 
     private void initializeTableLayout() {
-        tableLayoutA= new TableLayout(getApplicationContext());
-        tableLayoutA.setPadding(0,0,0,0);
+        tableLayout = new TableLayout(getApplicationContext());
+        tableLayout.setPadding(0,10,0,0);
         TableLayout.LayoutParams layoutParamsTableLayoutA= new TableLayout.LayoutParams(
                 (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
-        tableLayoutA.setLayoutParams(layoutParamsTableLayoutA);
-        tableLayoutA.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
-        this.relativeLayoutA.addView(tableLayoutA);
+        tableLayout.setLayoutParams(layoutParamsTableLayoutA);
+        tableLayout.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
+        this.relativeLayoutA.addView(tableLayout);
     }
 
     private void getScreenDimension(){
@@ -111,41 +118,64 @@ public class MainActivity extends AppCompatActivity {
         List<EventDb.EventRecord> events = db.getEvents();
         int i = 0;
         for(EventDb.EventRecord event : events) {
-            initializeRowForTable(i);
-            addColumnToTable(i, event.name);
-            addColumnToTable(i, event.start);
-            addColumnToTable(i, event.end);
-            addColumnToTable(i, Integer.toString(event.kpy));
+            addRowToTable(i, event);
             i=i+1;
         }
     }
 
-    private void addColumnToTable(int rowPos, String text) {
-        TableRow tableRowAdd= (TableRow) this.tableLayoutA.getChildAt(rowPos);
+//    private synchronized void addColumnToRow(int rowPos, String text) {
+//        TableRow tableRowAdd= (TableRow) this.tableLayout.getChildAt(rowPos);
+//        tableRow = new TableRow(getApplicationContext());
+//        TableRow.LayoutParams layoutParamsTableRow= new TableRow.LayoutParams(
+//                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
+//        tableRow.setPadding(3,3,3,4);
+//        tableRow.setBackground(getResources().getDrawable(R.drawable.cellbackground));
+//        tableRow.setLayoutParams(layoutParamsTableRow);
+//
+//        TextView label_date = new TextView(getApplicationContext());
+//
+//        label_date.setText(text);
+//        label_date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+//        tableRow.setTag(label_date);
+//        this.tableRow.addView(label_date);
+//
+//        tableRowAdd.addView(tableRow);
+//        this.tableLayout.addView(tableRow, pos);
+//    }
+
+    private synchronized void addRowToTable(int pos, EventDb.EventRecord event) {
         tableRow= new TableRow(getApplicationContext());
         TableRow.LayoutParams layoutParamsTableRow= new TableRow.LayoutParams(
-                (int)(SCREEN_WIDTH/1.2), (int)(SCREEN_HEIGHT/1.5));
+                (int)(SCREEN_WIDTH/1.2), SCREEN_HEIGHT/20);
         tableRow.setPadding(3,3,3,4);
-        //tableRow.setBackground(getResources().getDrawable(R.drawable.cellbackground));
+        tableRow.setBackground(getResources().getDrawable(R.drawable.cellbackground));
         tableRow.setLayoutParams(layoutParamsTableRow);
 
-        TextView label_date = new TextView(getApplicationContext());
+        //Adding columns
+        TextView name=new TextView(this.getApplicationContext());
+        TextView start=new TextView(this.getApplicationContext());
+        TextView end=new TextView(this.getApplicationContext());
+        TextView kms=new TextView(this.getApplicationContext());
 
-        label_date.setText(text);
-        label_date.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
-        tableRow.setTag(label_date);
-        this.tableRow.addView(label_date);
+        name.setText(event.name);
+        name.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        name.setMaxWidth(200);
+        tableRow.addView(name);
+        start.setText(event.start);
+        start.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        start.setMaxWidth(500);
+        tableRow.addView(start);
+        end.setText(event.end);
+        end.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        end.setMaxWidth(500);
+        tableRow.addView(end);
+        kms.setText(Integer.toString(event.kpy));
+        kms.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
+        kms.setMaxWidth(100);
+        tableRow.addView(kms);
 
-        tableRowAdd.addView(tableRow);
-    }
 
-    private void initializeRowForTable(int pos) {
-        TableRow tableRowB= new TableRow(getApplicationContext());
-        TableRow.LayoutParams layoutParamsTableRow= new TableRow.LayoutParams(
-                TableRow.LayoutParams.WRAP_CONTENT, (int)(SCREEN_HEIGHT/20));
-        tableRowB.setPadding(0,0,0,0);
-        tableRowB.setLayoutParams(layoutParamsTableRow);
-        this.tableLayoutA.addView(tableRowB, pos);
+        this.tableLayout.addView(tableRow, pos);
     }
 
     @Override
