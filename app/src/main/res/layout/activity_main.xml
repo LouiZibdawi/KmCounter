@@ -88,7 +88,7 @@
                 android:textColor="#000"
                 android:id="@+id/address"
                 android:layout_weight="1"
-                android:text="Km/Year"
+                android:text="Kms"
                 android:textSize="15dp"
                 android:ems="2"
                 android:maxLines="3"
@@ -104,6 +104,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="horizontal"
+        android:id="@+id/scrollView"
         android:layout_weight="1"
         android:layout_below="@id/table_header_layout">
 
@@ -111,12 +112,9 @@
             android:id="@+id/table_body_layout"
             android:layout_below="@id/table_header_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="300dp" />
 
     </ScrollView>
-
-
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static int SCREEN_HEIGHT;
     private static int SCREEN_WIDTH;
+    private int totalKpy;
 
 
     private RelativeLayout relativeLayoutMain;
@@ -50,14 +52,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        scrollViewD= new VerticalScroll(getApplicationContext());
-//        scrollViewD.setPadding(0,0,0,0);
-//        scrollViewD.setLayoutParams(new ViewGroup.LayoutParams(SCREEN_WIDTH, SCREEN_HEIGHT - (SCREEN_HEIGHT/20) ));
-
         tableLayout = (TableLayout) findViewById(R.id.table_body_layout);
-//        tableLayout.addView(scrollViewD);
-//
-//        scrollViewD.setScrollViewListener(this);
 
         //Reseting Db
         //MyDb.resetRB(this);
@@ -104,7 +99,50 @@ public class MainActivity extends AppCompatActivity {
         for(EventDb.EventRecord event : events) {
             addRowToTable(i, event);
             i=i+1;
+            totalKpy = totalKpy + event.kpy;
         }
+        addFinalRow(totalKpy);
+    }
+
+    private void addFinalRow(int totalKpy) {
+        //Initializing Row
+        TableRow tr = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT,
+                1.0f);
+        tr.setLayoutParams(lp);
+
+        Typeface boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD);
+
+        //Creating columns
+        TextView blank = createColumn("",lp);
+        TextView blank2 = createColumn("",lp);
+
+        TextView text = new TextView(this);
+        text.setLayoutParams(lp);
+        text.setText("Estimated Kilometers Travelled");
+        text.setTextSize(15);
+        text.setMinLines(3);
+        text.setEms(2);
+        text.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        text.setGravity(Gravity.CENTER);
+        text.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
+
+        TextView value = new TextView(this);
+        value.setLayoutParams(lp);
+        value.setText("\n" + Integer.toString(totalKpy) + "\n");
+        value.setTextSize(15);
+        value.setEms(2);
+        value.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        value.setGravity(Gravity.CENTER);
+        value.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
+
+        tr.addView(blank);
+        tr.addView(blank2);
+        tr.addView(text);
+        tr.addView(value);
+
+        this.tableLayout.addView(tr);
     }
 
 
