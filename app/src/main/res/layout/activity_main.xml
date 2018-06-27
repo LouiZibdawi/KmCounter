@@ -59,7 +59,7 @@
                 android:background="@drawable/cell_background"/>
 
             <TextView
-                android:id="@+id/age"
+                android:id="@+id/start"
                 android:textColor="#000"
                 android:fontFamily="serif"
                 android:layout_weight="1"
@@ -74,7 +74,7 @@
 
             <TextView
                 android:textColor="#000"
-                android:id="@+id/position"
+                android:id="@+id/end"
                 android:layout_weight="1"
                 android:text="End"
                 android:textSize="15dp"
@@ -84,11 +84,25 @@
                 android:gravity="center"
                 android:padding="7dp"
                 android:background="@drawable/cell_background"/>
+
             <TextView
                 android:textColor="#000"
-                android:id="@+id/address"
+                android:id="@+id/kpt"
                 android:layout_weight="1"
-                android:text="Kms"
+                android:text="Kms/Trip"
+                android:textSize="15dp"
+                android:ems="2"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:padding="7dp"
+                android:background="@drawable/cell_background"/>
+
+            <TextView
+                android:textColor="#000"
+                android:id="@+id/kms"
+                android:layout_weight="1"
+                android:text="Total Kms"
                 android:textSize="15dp"
                 android:ems="2"
                 android:maxLines="3"
@@ -102,19 +116,60 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="250dp"
         android:scrollbars="horizontal"
         android:id="@+id/scrollView"
         android:layout_weight="1"
-        android:layout_below="@id/table_header_layout">
+        android:layout_below="@id/table_header_layout"
+        android:background="@drawable/row_background">
 
         <TableLayout
             android:id="@+id/table_body_layout"
             android:layout_below="@id/table_header_layout"
             android:layout_width="match_parent"
-            android:layout_height="300dp" />
+            android:layout_height="wrap_content" />
 
     </ScrollView>
+
+    <TableLayout
+        android:id="@+id/table_final_row"
+        android:layout_below="@id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_above="@id/fab">
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Kilometers Per:"
+            android:textStyle="bold"
+            android:textSize="20dp" />
+
+        <RadioButton android:id="@+id/kpw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Week"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton android:id="@+id/kpm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Month"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton android:id="@+id/kpy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Year"
+            android:layout_weight="1"
+            android:onClick="onRadioButtonClicked"/>
+    </RadioGroup>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"

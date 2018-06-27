@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -26,24 +28,19 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     private EventDb db;
 
-    private static int SCREEN_HEIGHT;
-    private static int SCREEN_WIDTH;
-    private int totalKpy;
+    private int totalKpy, numEvents;
+    private String kmView;
 
+    private RadioButton kpw,kpm,kpy;
 
-    private RelativeLayout relativeLayoutMain;
-    private RelativeLayout relativeLayoutA;
-
-    private TableLayout tableLayout;
-    private TableRow tableRow;
-
-    private VerticalScroll scrollViewD;
+    private TableLayout tableLayout, finalRowTable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +50,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         tableLayout = (TableLayout) findViewById(R.id.table_body_layout);
+        finalRowTable = (TableLayout) findViewById(R.id.table_final_row);
 
         //Reseting Db
         //MyDb.resetRB(this);
         db = MyDb.getDB(this);
+
+        getKmView(savedInstanceState);
+
+        initializeRadioButtons();
 
         displayEvents();
 
@@ -69,14 +71,71 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getScreenDimension(){
-        WindowManager wm= (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-        Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        SCREEN_WIDTH= size.x;
-        SCREEN_HEIGHT = size.y;
+    private void initializeRadioButtons() {
+        kpw = (RadioButton) findViewById(R.id.kpw);
+        kpm = (RadioButton) findViewById(R.id.kpm);
+        kpy = (RadioButton) findViewById(R.id.kpy);
+
+        switch(kmView) {
+            case "kpw":
+                kpw.setChecked(true);
+                break;
+            case "kpm":
+                kpm.setChecked(true);
+                break;
+            case "kpy":
+                kpy.setChecked(true);
+                break;
+        }
     }
+
+    private void getKmView(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                kmView = "kpy";
+            } else {
+                kmView = extras.getString("KmView");
+            }
+        } else {
+            kmView = (String) savedInstanceState.getSerializable("KmView");
+        }
+        System.out.println("Looking for: " +kmView);
+    }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        Intent refresh = new Intent(this, MainActivity.class);
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.kpw:
+                if (checked)
+                    refresh.putExtra("KmView", "kpw");
+                break;
+            case R.id.kpm:
+                if (checked)
+                    refresh.putExtra("KmView", "kpm");
+                break;
+            case R.id.kpy:
+                if (checked)
+                    refresh.putExtra("KmView", "kpy");
+                break;
+        }
+        startActivity(refresh);
+        this.finish();
+    }
+
+//    private void getScreenDimension(){
+//        WindowManager wm= (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
+//        Display display = wm.getDefaultDisplay();
+//        Point size = new Point();
+//        display.getSize(size);
+//        SCREEN_WIDTH= size.x;
+//        SCREEN_HEIGHT = size.y;
+//    }
 
     private void addEventPage() {
         Intent intent = new Intent(MainActivity.this, AddEvent.class);
@@ -88,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode==RESULT_OK){
             Intent refresh = new Intent(this, MainActivity.class);
+            refresh.putExtra("KmView", "kpy");
             startActivity(refresh);
             this.finish();
         }
@@ -95,58 +155,33 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayEvents() {
         List<EventDb.EventRecord> events = db.getEvents();
-        int i = 3;
+ //       events.sort(Comparator.comparing(EventDb.EventRecord :: getKms));
+        numEvents = 0;
         for(EventDb.EventRecord event : events) {
-            addRowToTable(i, event);
-            i=i+1;
-            totalKpy = totalKpy + event.kpy;
+            //Changing total kilometers from year to month or week if that button is checked
+            int kms = getKmsForView(event.kpy, kmView);
+            numEvents= numEvents + 1;
+
+            addRowToTable(event, kms);
+
+            totalKpy = totalKpy + kms;
         }
-        addFinalRow(totalKpy);
+        if(events.size() > 0)
+            addFinalRow(totalKpy);
     }
 
-    private void addFinalRow(int totalKpy) {
-        //Initializing Row
-        TableRow tr = new TableRow(this);
-        TableRow.LayoutParams lp = new TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT,
-                1.0f);
-        tr.setLayoutParams(lp);
-
-        Typeface boldTypeface = Typeface.defaultFromStyle(Typeface.BOLD);
-
-        //Creating columns
-        TextView blank = createColumn("",lp);
-        TextView blank2 = createColumn("",lp);
-
-        TextView text = new TextView(this);
-        text.setLayoutParams(lp);
-        text.setText("Estimated Kilometers Travelled");
-        text.setTextSize(15);
-        text.setMinLines(3);
-        text.setEms(2);
-        text.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        text.setGravity(Gravity.CENTER);
-        text.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
-
-        TextView value = new TextView(this);
-        value.setLayoutParams(lp);
-        value.setText("\n" + Integer.toString(totalKpy) + "\n");
-        value.setTextSize(15);
-        value.setEms(2);
-        value.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
-        value.setGravity(Gravity.CENTER);
-        value.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
-
-        tr.addView(blank);
-        tr.addView(blank2);
-        tr.addView(text);
-        tr.addView(value);
-
-        this.tableLayout.addView(tr);
+    private int getKmsForView(int kms, String kmView) {
+        switch(kmView) {
+            case "kpw":
+                return (int)((double)kms / 52.1429);
+            case "kpm":
+                return kms / 12;
+        }
+        //Return passed in value if kmView is neither week or month because it is year
+        return kms;
     }
 
-
-    private synchronized void addRowToTable(int pos, EventDb.EventRecord event) {
+    private synchronized void addRowToTable(EventDb.EventRecord event, int totalKms) {
 
         //Initializing Row
         TableRow tr = new TableRow(this);
@@ -160,13 +195,20 @@ public class MainActivity extends AppCompatActivity {
         TextView name = createColumn(event.name, lp);
         TextView start = createColumn(event.start, lp);
         TextView end = createColumn(event.end, lp);
-        TextView kms = createColumn(Integer.toString(event.kpy), lp);
+        TextView kpt = createColumn(Integer.toString(event.kpt), lp);
+        TextView kms = createColumn(Integer.toString(totalKms), lp);
 
         //Adding columns to row
         tr.addView(name);
         tr.addView(start);
         tr.addView(end);
+        tr.addView(kpt);
         tr.addView(kms);
+
+        //If even number event
+        if(numEvents % 2 == 0) {
+            tr.setBackgroundColor(Color.parseColor("#D3D3D3"));
+        }
 
         this.tableLayout.addView(tr);
     }
@@ -183,6 +225,37 @@ public class MainActivity extends AppCompatActivity {
         tv.setEllipsize(TextUtils.TruncateAt.END);
 
         return tv;
+    }
+
+    private void addFinalRow(int totalKpy) {
+        //Initializing Row
+        TableRow tr = new TableRow(this);
+        TableRow.LayoutParams lp = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT,
+                1.0f);
+        tr.setLayoutParams(lp);
+
+        //Creating columns
+        TextView blank = createColumn("",lp);
+        TextView blank2 = createColumn("",lp);
+        TextView blank3 = createColumn("",lp);
+
+        TextView text = createColumn("Total Kilometers", lp);
+        text.setMinLines(2);
+        text.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        text.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
+
+        TextView totalKms = createColumn(Integer.toString(totalKpy) + "\n", lp);
+        totalKms.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        totalKms.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
+
+        tr.addView(blank);
+        tr.addView(blank2);
+        tr.addView(blank3);
+        tr.addView(text);
+        tr.addView(totalKms);
+
+        this.finalRowTable.addView(tr);
     }
 
     @Override

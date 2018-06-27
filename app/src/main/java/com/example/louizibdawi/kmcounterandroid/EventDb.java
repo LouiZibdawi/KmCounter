@@ -139,6 +139,9 @@ public class EventDb extends SQLiteOpenHelper {
         public String end;
         public int kpt;
         public int kpy;
+        public int getKms() {
+            return kpy;
+        }
     }
 
 }
