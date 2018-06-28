@@ -29,7 +29,7 @@
         android:layout_below="@id/appBar"
         android:gravity="center"
         android:text="Your Events"
-        android:textSize="30dp"
+        android:textSize="30sp"
         android:textStyle="bold"/>
 
     <TableLayout
@@ -46,80 +46,78 @@
 
             <TextView
                 android:id="@+id/name"
-                android:fontFamily="serif"
                 android:layout_weight="1"
                 android:textColor="#000"
-                android:text="Event"
-                android:textSize="15dp"
+                android:text="@string/event"
+                android:textSize="15sp"
                 android:ems="2"
                 android:maxLines="3"
+                android:minLines="2"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:padding="7dp"
                 android:background="@drawable/cell_background"/>
 
             <TextView
                 android:id="@+id/start"
                 android:textColor="#000"
-                android:fontFamily="serif"
                 android:layout_weight="1"
-                android:text="Start"
-                android:textSize="15dp"
+                android:text="@string/start"
+                android:textSize="15sp"
                 android:ems="2"
+                android:minLines="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:padding="7dp"
                 android:background="@drawable/cell_background"/>
 
             <TextView
                 android:textColor="#000"
                 android:id="@+id/end"
                 android:layout_weight="1"
-                android:text="End"
-                android:textSize="15dp"
+                android:text="@string/end"
+                android:textSize="15sp"
                 android:ems="2"
+                android:minLines="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:padding="7dp"
                 android:background="@drawable/cell_background"/>
 
             <TextView
                 android:textColor="#000"
                 android:id="@+id/kpt"
                 android:layout_weight="1"
-                android:text="Kms/Trip"
-                android:textSize="15dp"
+                android:text="@string/kms_trip"
+                android:textSize="15sp"
                 android:ems="2"
+                android:minLines="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:padding="7dp"
                 android:background="@drawable/cell_background"/>
 
             <TextView
                 android:textColor="#000"
                 android:id="@+id/kms"
                 android:layout_weight="1"
-                android:text="Total Kms"
-                android:textSize="15dp"
+                android:text="@string/total_kms"
+                android:textSize="15sp"
                 android:ems="2"
+                android:minLines="2"
                 android:maxLines="3"
                 android:ellipsize="end"
                 android:gravity="center"
-                android:padding="7dp"
                 android:background="@drawable/cell_background"/>
         </TableRow>
 
     </TableLayout>
 
-    <ScrollView
+    <com.example.louizibdawi.kmcounterandroid.MaxHeightScrollView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
+        app:mhs_maxHeight="300dp"
         android:scrollbars="horizontal"
         android:id="@+id/scrollView"
-        android:layout_weight="1"
         android:layout_below="@id/table_header_layout"
         android:background="@drawable/row_background">
 
@@ -128,20 +126,20 @@
             android:layout_below="@id/table_header_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-
-    </ScrollView>
+    </com.example.louizibdawi.kmcounterandroid.MaxHeightScrollView>
 
     <TableLayout
         android:id="@+id/table_final_row"
         android:layout_below="@id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_above="@id/fab">
+        android:layout_alignBottom="@id/fab"
+        android:layout_marginStart="10sp">
 
         <TextView
             android:id="@+id/header"
@@ -149,7 +147,7 @@
             android:layout_height="wrap_content"
             android:text="View Kilometers Per:"
             android:textStyle="bold"
-            android:textSize="20dp" />
+            android:textSize="20sp" />
 
         <RadioButton android:id="@+id/kpw"
             android:layout_width="wrap_content"

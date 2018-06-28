@@ -3,6 +3,11 @@
     <string name="action_settings">Settings</string>
     <string name="name">Name</string>
     <string name="enter_address_city_or_zip_code">Enter Address, City or Zip Code</string>
+    <string name="kms_trip">Kms/Trip</string>
+    <string name="total_kms">Total Kms</string>
+    <string name="end">End</string>
+    <string name="start">Start</string>
+    <string name="event">Event</string>
     <string-array name="names">
         <item>Week</item>
         <item>Month</item>

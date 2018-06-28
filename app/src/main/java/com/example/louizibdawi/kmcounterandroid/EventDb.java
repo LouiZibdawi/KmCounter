@@ -32,9 +32,12 @@ public class EventDb extends SQLiteOpenHelper {
     private final static String EVENT_TABLE = "Events";
     private final static String EVENT_NAME = "Name";
     private final static String EVENT_START = "Start";
-    private final static String EVENT_END = "End";
+    private final static String EVENT_END = "Dest";
+    private final static String EVENT_NUMPICKER = "NumPicker";
+    private final static String EVENT_DATEPICKER = "DatePicker";
     private final static String EVENT_KPT = "KmsPerTrip";
     private final static String EVENT_KPY = "KmsPerYear";
+    private final static String EVENT_ONEWAY = "OneWay";
 
     private Context context;
 
@@ -70,8 +73,11 @@ public class EventDb extends SQLiteOpenHelper {
                         EVENT_NAME + " TEXT PRIMARY KEY," +
                         EVENT_START + " TEXT," +
                         EVENT_END + " TEXT," +
+                        EVENT_NUMPICKER + " INT," +
+                        EVENT_DATEPICKER + " INT," +
                         EVENT_KPT + " DOUBLE," +
-                        EVENT_KPY + " DOUBLE" +
+                        EVENT_KPY + " DOUBLE," +
+                        EVENT_ONEWAY + " INT" +
                         ")";
         //System.out.println(createEventTable);
         db.execSQL(createEventTable);
@@ -84,15 +90,30 @@ public class EventDb extends SQLiteOpenHelper {
         return db.delete(EVENT_TABLE, EVENT_NAME + "=?", new String[]{eventName}) > 0;
     }
 
-    public void addEvent(String eventName, String start, String end, double numKmsPerTrip, double numKmsPerYear) {
+    public void addEvent(String eventName, String start, String dest, int numPicker, int datePicker,
+                         double numKmsPerTrip, double numKmsPerYear, int oneWay) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
         String sql =
-                "INSERT or replace INTO " + EVENT_TABLE + "(" + EVENT_NAME + "," + EVENT_START + ","
-                        + EVENT_END + "," + EVENT_KPT + "," + EVENT_KPY + ") VALUES ('" + eventName
-                        + "','" + start + "','" + end + "'," + numKmsPerTrip + "," + numKmsPerYear
-                        + ")";
+                "INSERT or replace INTO " + EVENT_TABLE +
+                        "(" + EVENT_NAME + ","
+                        + EVENT_START + ","
+                        + EVENT_END + ","
+                        + EVENT_NUMPICKER + ","
+                        + EVENT_DATEPICKER + ","
+                        + EVENT_KPT + ","
+                        + EVENT_KPY + ","
+                        + EVENT_ONEWAY + ") " +
+                        "VALUES ('"
+                        + eventName + "','"
+                        + start + "','"
+                        + dest + "',"
+                        + numPicker + ","
+                        + datePicker + ","
+                        + numKmsPerTrip + ","
+                        + numKmsPerYear + ","
+                        + oneWay + ")";
 
         //System.out.println(sql);
 
@@ -106,14 +127,15 @@ public class EventDb extends SQLiteOpenHelper {
         List<EventRecord> events = new ArrayList<>();
 
         Cursor eventCursor = db.query(EVENT_TABLE, new String[]{EVENT_NAME, EVENT_START,
-                        EVENT_END, EVENT_KPT, EVENT_KPY}, null,null,
-                null, null, null);
+                        EVENT_END, EVENT_NUMPICKER, EVENT_DATEPICKER, EVENT_KPT,
+                        EVENT_KPY, EVENT_ONEWAY},
+                null,null,null, null, null);
 
         System.out.println("Found " + eventCursor.getCount() + " events");
 
         //If it finds rows
         if(eventCursor.getCount() > 0) {
-            //Loop through each event until cursor is past the end
+            //Loop through each event until cursor is past the dest
             while(eventCursor.moveToNext()) {
                 events.add(getEventRecord(eventCursor));
             }
@@ -127,21 +149,24 @@ public class EventDb extends SQLiteOpenHelper {
         EventRecord event = new EventRecord();
         event.name = eventCursor.getString(eventCursor.getColumnIndex(EVENT_NAME));
         event.start = eventCursor.getString(eventCursor.getColumnIndex(EVENT_START));
-        event.end = eventCursor.getString(eventCursor.getColumnIndex(EVENT_END));
+        event.dest = eventCursor.getString(eventCursor.getColumnIndex(EVENT_END));
+        event.numPicker = eventCursor.getInt(eventCursor.getColumnIndex(EVENT_NUMPICKER));
+        event.datePicker = eventCursor.getInt(eventCursor.getColumnIndex(EVENT_DATEPICKER));
         event.kpt = eventCursor.getInt(eventCursor.getColumnIndex(EVENT_KPT));
         event.kpy = eventCursor.getInt(eventCursor.getColumnIndex(EVENT_KPY));
+        event.oneWay = eventCursor.getInt(eventCursor.getColumnIndex(EVENT_ONEWAY));
         return event;
     }
 
     public class EventRecord {
         public String name;
         public String start;
-        public String end;
+        public String dest;
+        public int numPicker;
+        public int datePicker;
         public int kpt;
         public int kpy;
-        public int getKms() {
-            return kpy;
-        }
+        public int oneWay;
     }
 
 }

@@ -4,6 +4,7 @@ import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
@@ -50,24 +51,20 @@ public class AddEvent extends AppCompatActivity
     private double numKmsPerTrip, numKmsPerYear;
     private String startAd, endAd;
     private EventDb db;
+    private int oneWayValue;
 
     //Widgets
     private EditText eventName;
-    private AutoCompleteTextView startAddress;
-    private AutoCompleteTextView endAddress;
-    private NumberPicker num, date;
+    private AutoCompleteTextView startAddress, destAddress;
+    private NumberPicker numPicker, datePicker;
     private RadioButton oneWay;
     private Button submit;
     private ImageButton swap;
+    private TextInputLayout name_layout, start_layout, dest_layout;
 
     //Vars
     private PlaceAutocompleteAdapter addressAdapter;
     private GeoDataClient mGeoDataClient;
-    private Geocoder geocoder;
-    private final String USER_AGENT = "Mozilla/5.0";
-    protected GoogleApiClient mGoogleApiClient;
-    private static final int GOOGLE_API_CLIENT_ID = 0;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,62 +74,126 @@ public class AddEvent extends AppCompatActivity
         //Initializing page elements
         eventName = (EditText) findViewById(R.id.eventName);
         startAddress = (AutoCompleteTextView) findViewById(R.id.startAddress);
-        endAddress = (AutoCompleteTextView) findViewById(R.id.destAddress);
+        destAddress = (AutoCompleteTextView) findViewById(R.id.destAddress);
         oneWay = (RadioButton) findViewById(R.id.oneWay);
         submit = (Button) findViewById(R.id.submit);
         swap = (ImageButton) findViewById(R.id.swapImageButton);
 
+        if(oneWay.isChecked())
+            oneWayValue = 1;
+        else
+            oneWayValue = 0;
+
         //Initializing database
         db = MyDb.getDB(this);
 
-        //Initializing geocoder
-        geocoder = new Geocoder(this);
-
         //Setting number wheel for how often with values 1 to 50
-        num = findViewById(R.id.numberPicker);
-        num.setMinValue(1);
-        num.setMaxValue(50);
+        numPicker = findViewById(R.id.numberPicker);
+        numPicker.setMinValue(1);
+        numPicker.setMaxValue(50);
 
         //Setting date wheel with Week Month and Year values
-        date = findViewById(R.id.datePicker);
-        date.setMinValue(0);
-        date.setMaxValue(2);
-        date.setDisplayedValues(new String[]{"Week", "Month", "Year"});
+        datePicker = findViewById(R.id.datePicker);
+        datePicker.setMinValue(0);
+        datePicker.setMaxValue(2);
+        datePicker.setDisplayedValues(new String[]{"Week", "Month", "Year"});
+
+        getPassedInValues(savedInstanceState);
 
         init();
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //Getting distance for single (1 or 2 way) trip
-                getNumKmsPerTrip(startAddress.getText().toString(),
-                        endAddress.getText().toString(),
-                        oneWay.isChecked());
-                getNumKmsPerYear(num.getValue(), date.getValue());
+                
+                int errors = errorCheck();
 
-                db.addEvent(eventName.getText().toString(),
-                        startAddress.getText().toString(),
-                        endAddress.getText().toString(),
-                        numKmsPerTrip,
-                        numKmsPerYear
-                );
+                if(errors == 0) {
+                    //Getting distance for single (1 or 2 way) trip
+                    getNumKmsPerTrip(startAddress.getText().toString(),
+                            destAddress.getText().toString(),
+                            oneWay.isChecked());
+                    //Getting total distance in a year based on amount of trips
+                    getNumKmsPerYear(numPicker.getValue(), datePicker.getValue());
 
-                setResult(RESULT_OK, null);
-                finish();
+                    db.addEvent(eventName.getText().toString(),
+                            startAddress.getText().toString(),
+                            destAddress.getText().toString(),
+                            numPicker.getValue(),
+                            datePicker.getValue(),
+                            numKmsPerTrip,
+                            numKmsPerYear,
+                            oneWayValue
+                    );
 
+                    setResult(RESULT_OK, null);
+                    finish();
+
+                }
             }
         });
 
         swap.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 startAd = startAddress.getText().toString();
-                endAd = endAddress.getText().toString();
+                endAd = destAddress.getText().toString();
 
                 startAddress.setText(endAd);
-                endAddress.setText(startAd);
+                destAddress.setText(startAd);
             }
 
         });
 
+    }
+
+    private void getPassedInValues(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras != null) {
+                eventName.setText(extras.getString("name"));
+                startAddress.setText(extras.getString("start"));
+                destAddress.setText(extras.getString("dest"));
+                numPicker.setValue(extras.getInt("numPicker"));
+                datePicker.setValue(extras.getInt("datePicker"));
+            }
+        } else {
+            eventName.setText((String) savedInstanceState.getSerializable("name"));
+            startAddress.setText((String) savedInstanceState.getSerializable("start"));
+            destAddress.setText((String) savedInstanceState.getSerializable("dest"));
+            numPicker.setValue((int) savedInstanceState.getSerializable("numPicker"));
+            datePicker.setValue((int) savedInstanceState.getSerializable("datePicker"));
+        }
+    }
+
+    private int errorCheck() {
+        int numErrors = 0;
+
+        name_layout = (TextInputLayout) findViewById(R.id.name_layout);
+        start_layout = (TextInputLayout) findViewById(R.id.start_layout);
+        dest_layout = (TextInputLayout) findViewById(R.id.dest_layout);
+
+        if (eventName.getText().toString().trim().equals("")) {
+            numErrors++;
+            name_layout.setError("Event name can not be blank");
+        }
+        else
+            name_layout.setErrorEnabled(false);
+        
+        if(startAddress.getText().toString().trim().equals("")) {
+            numErrors++;
+            start_layout.setError("Start address can not be blank");
+        }
+        else
+            start_layout.setErrorEnabled(false);
+        
+        if(destAddress.getText().toString().trim().equals("")) {
+            numErrors++;
+            dest_layout.setError("Destination address can not be blank");
+        }
+        else
+            dest_layout.setErrorEnabled(false);
+
+        return numErrors;
+        
     }
 
     private void init() {
@@ -143,13 +204,13 @@ public class AddEvent extends AppCompatActivity
         addressAdapter = new PlaceAutocompleteAdapter(AddEvent.this, mGeoDataClient, LAT_LNG_BOUNDS, null);
 
         startAddress.setAdapter(addressAdapter);
-        endAddress.setAdapter(addressAdapter);
+        destAddress.setAdapter(addressAdapter);
 
     }
 
     private void getNumKmsPerTrip(String start, String dest, boolean oneWay) {
         String startStr = startAddress.getText().toString().replaceAll("\\s+", "");
-        String endStr = endAddress.getText().toString().replaceAll("\\s+", "");
+        String endStr = destAddress.getText().toString().replaceAll("\\s+", "");
 
         String urlStr = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + startStr
                 + "&destinations=" + endStr + "&key=" + API_KEY;

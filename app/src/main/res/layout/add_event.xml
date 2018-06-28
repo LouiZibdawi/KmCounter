@@ -12,126 +12,165 @@
     android:paddingEnd="6dp"
     android:paddingStart="6dp">
 
-    <TextView
-        android:id="@+id/eventNameLabel"
-        android:layout_marginTop="15dp"
-        android:layout_width="wrap_content"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/name_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="Event Name:"
-        android:textSize="10pt"
-        android:textColor="#000000"
-        android:layout_marginBottom="20dp"/>
+        android:layout_alignParentTop="true">
 
-    <EditText
-        android:id="@+id/eventName"
-        android:layout_width="183dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/eventNameLabel"
-        android:layout_alignBottom="@+id/eventNameLabel"
-        android:layout_marginStart="13dp"
-        android:layout_toEndOf="@+id/startLabel"
-        android:background="@drawable/white_border"
-        android:gravity="left"
-        android:textSize="10pt" />
-
-    <TextView
-        android:id="@+id/startLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Start Address:"
-        android:textSize="10pt"
-        android:textColor="#000000"
-        android:layout_below="@id/eventNameLabel"/>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@id/startLabel"
-        android:elevation="10dp"
-        android:paddingTop="20dp"
-        android:background="@drawable/white_border"
-        android:id="@+id/startSearch">
-
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/ic_magnify"/>
-
-        <AutoCompleteTextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toEndOf="@+id/ic_magnify"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:textColor="#000000"
-            android:id="@+id/startAddress"
-            android:background="@null"
-            android:hint="@string/enter_address_city_or_zip_code"
-            android:imeOptions="actionSearch"/>
+            android:layout_height="wrap_content">
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/eventNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="15dp"
+                android:text="Event Name:"
+                android:textColor="#000000"
+                android:textSize="10pt" />
 
-    <TextView
-        android:id="@+id/destLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/startSearch"
-        android:text="Destination Address:"
-        android:paddingTop="20dp"
-        android:textSize="10pt"
-        android:textColor="#000000"/>
 
-    <RelativeLayout
+            <EditText
+                android:id="@+id/eventName"
+                android:layout_width="183dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/eventNameLabel"
+                android:layout_alignBottom="@+id/eventNameLabel"
+                android:layout_marginStart="13dp"
+                android:layout_toEndOf="@+id/eventNameLabel"
+                android:background="@drawable/white_border"
+                android:gravity="left"
+                android:maxLines="1"
+                android:textSize="10pt" />
+
+        </RelativeLayout>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/start_layout"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_below="@id/destLabel"
-        android:elevation="10dp"
-        android:paddingTop="20dp"
-        android:background="@drawable/white_border"
-        android:id="@+id/destSearch">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/name_layout">
 
-        <ImageView
-            android:layout_width="15dp"
-            android:layout_height="15dp"
-            android:id="@+id/ic_magnify2"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/ic_magnify"/>
-
-        <AutoCompleteTextView
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_toRightOf="@+id/ic_magnify2"
-            android:layout_centerVertical="true"
-            android:textSize="15sp"
-            android:textColor="#000000"
-            android:id="@+id/destAddress"
-            android:background="@null"
-            android:hint="Enter Address, City or Zip Code"
-            android:imeOptions="actionSearch"/>
+            android:layout_height="wrap_content">
 
-    </RelativeLayout>
+        <TextView
+            android:id="@+id/startLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start Address:"
+            android:textSize="10pt"
+            android:textColor="#000000"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_below="@id/startLabel"
+                    android:elevation="10dp"
+                    android:paddingTop="20dp"
+                    android:background="@drawable/white_border"
+                    android:id="@+id/startSearch">
+
+                    <ImageView
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:id="@+id/ic_magnify"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/ic_magnify"/>
+
+                    <AutoCompleteTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toEndOf="@+id/ic_magnify"
+                        android:layout_centerVertical="true"
+                        android:textSize="15sp"
+                        android:textColor="#000000"
+                        android:id="@+id/startAddress"
+                        android:background="@null"
+                        android:hint="@string/enter_address_city_or_zip_code"
+                        android:imeOptions="actionSearch"/>
+
+                </RelativeLayout>
+        </RelativeLayout>
+    </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/dest_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/start_layout">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/destLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Destination Address:"
+                android:paddingTop="20dp"
+                android:textSize="10pt"
+                android:textColor="#000000"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_below="@id/destLabel"
+                android:elevation="10dp"
+                android:paddingTop="20dp"
+                android:background="@drawable/white_border"
+                android:id="@+id/destSearch">
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:id="@+id/ic_magnify2"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="10dp"
+                    android:src="@mipmap/ic_magnify"/>
+
+                <AutoCompleteTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toRightOf="@+id/ic_magnify2"
+                    android:layout_centerVertical="true"
+                    android:textSize="15sp"
+                    android:textColor="#000000"
+                    android:id="@+id/destAddress"
+                    android:background="@null"
+                    android:hint="Enter Address, City or Zip Code"
+                    android:imeOptions="actionSearch"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </android.support.design.widget.TextInputLayout>
+
 
     <TextView
-        android:id="@+id/howOften"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/destSearch"
-        android:text="How often? (Ex. 5 times a week)"
-        android:textColor="#000000"
-        android:paddingTop="20dp"
-        android:textSize="10pt" />
+    android:id="@+id/howOften"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/dest_layout"
+    android:text="How often? (Ex. 5 times a week)"
+    android:textColor="#000000"
+    android:paddingTop="20dp"
+    android:textSize="10pt" />
 
     <NumberPicker
         android:id="@+id/numberPicker"
@@ -150,9 +189,9 @@
         android:id="@+id/oneWay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/eventName"
         android:layout_below="@+id/howOften"
-        android:layout_marginEnd="10dp"
+        android:layout_toEndOf="@id/datePicker"
+        android:layout_marginLeft="40dp"
         android:layout_marginTop="30dp"
         android:text="One-Way Trip"
         android:textSize="8pt" />
@@ -163,15 +202,17 @@
         android:layout_width="180dp"
         android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="42dp"
-        android:layout_toEndOf="@+id/destLabel"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="19dp"
+        android:layout_marginEnd="16dp"
         android:text="Submit" />
 
     <ImageButton
         android:id="@+id/swapImageButton"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_above="@+id/destSearch"
-        android:layout_toEndOf="@+id/eventName"
+        android:layout_alignEnd="@+id/submit"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="158dp"
         android:src="@mipmap/ic_swap" />
 </RelativeLayout>

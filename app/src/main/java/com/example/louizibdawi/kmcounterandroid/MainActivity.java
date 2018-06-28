@@ -1,5 +1,6 @@
 package com.example.louizibdawi.kmcounterandroid;
 
+import android.app.usage.UsageEvents;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -54,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         //Reseting Db
         //MyDb.resetRB(this);
+
+        //Getting Db
         db = MyDb.getDB(this);
 
         getKmView(savedInstanceState);
@@ -66,11 +70,40 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addEventPage();
+                Intent intent = new Intent(MainActivity.this, AddEvent.class);
+                startActivityForResult(intent, 1);
             }
         });
     }
+    /*
+     * Based on the extras passed into the current intent, this method will set
+     * the string "KmView" to the appropriate view for the page.
+     *
+     * @param savedInstanceState A reference to a Bundle object that is passed into the activity
+     */
 
+    private void getKmView(Bundle savedInstanceState) {
+        if (savedInstanceState == null) {
+            Bundle extras = getIntent().getExtras();
+            if(extras == null) {
+                kmView = "kpy";
+            } else {
+                kmView = extras.getString("KmView");
+            }
+        } else {
+            kmView = (String) savedInstanceState.getSerializable("KmView");
+        }
+        System.out.println("Looking for: " +kmView);
+    }
+
+    /*
+     * Initializes the Radio Buttons at the bottom of the home page.
+     * It checks the current radio button selected by the user based
+     * on the current "kmView" which is passed as an extra every time
+     * the activity refreshes
+     *
+     * Default kmView is "kpy"
+     */
     private void initializeRadioButtons() {
         kpw = (RadioButton) findViewById(R.id.kpw);
         kpm = (RadioButton) findViewById(R.id.kpm);
@@ -87,20 +120,6 @@ public class MainActivity extends AppCompatActivity {
                 kpy.setChecked(true);
                 break;
         }
-    }
-
-    private void getKmView(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            Bundle extras = getIntent().getExtras();
-            if(extras == null) {
-                kmView = "kpy";
-            } else {
-                kmView = extras.getString("KmView");
-            }
-        } else {
-            kmView = (String) savedInstanceState.getSerializable("KmView");
-        }
-        System.out.println("Looking for: " +kmView);
     }
 
     public void onRadioButtonClicked(View view) {
@@ -128,20 +147,6 @@ public class MainActivity extends AppCompatActivity {
         this.finish();
     }
 
-//    private void getScreenDimension(){
-//        WindowManager wm= (WindowManager) getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
-//        Display display = wm.getDefaultDisplay();
-//        Point size = new Point();
-//        display.getSize(size);
-//        SCREEN_WIDTH= size.x;
-//        SCREEN_HEIGHT = size.y;
-//    }
-
-    private void addEventPage() {
-        Intent intent = new Intent(MainActivity.this, AddEvent.class);
-        startActivityForResult(intent, 1);
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -155,8 +160,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayEvents() {
         List<EventDb.EventRecord> events = db.getEvents();
- //       events.sort(Comparator.comparing(EventDb.EventRecord :: getKms));
+        Collections.sort(events, new Comparator<EventDb.EventRecord>() {
+
+            public int compare(EventDb.EventRecord o1, EventDb.EventRecord o2) {
+                return o2.kpy - o1.kpy;
+            }
+        });
+
         numEvents = 0;
+
         for(EventDb.EventRecord event : events) {
             //Changing total kilometers from year to month or week if that button is checked
             int kms = getKmsForView(event.kpy, kmView);
@@ -194,9 +206,16 @@ public class MainActivity extends AppCompatActivity {
         //Creating columns
         TextView name = createColumn(event.name, lp);
         TextView start = createColumn(event.start, lp);
-        TextView end = createColumn(event.end, lp);
+        TextView end = createColumn(event.dest, lp);
         TextView kpt = createColumn(Integer.toString(event.kpt), lp);
         TextView kms = createColumn(Integer.toString(totalKms), lp);
+
+        //Adding link to textviews
+        makeTextViewClickable(name, event);
+        makeTextViewClickable(start, event);
+        makeTextViewClickable(end, event);
+        makeTextViewClickable(kpt, event);
+        makeTextViewClickable(kms, event);
 
         //Adding columns to row
         tr.addView(name);
@@ -207,10 +226,23 @@ public class MainActivity extends AppCompatActivity {
 
         //If even number event
         if(numEvents % 2 == 0) {
-            tr.setBackgroundColor(Color.parseColor("#D3D3D3"));
+            tr.setBackgroundColor(Color.parseColor("#E8E8E8"));
         }
 
         this.tableLayout.addView(tr);
+    }
+
+    private void makeTextViewClickable(TextView textView, EventDb.EventRecord event) {
+        textView.setOnClickListener(view -> {
+            Intent intent = new Intent(MainActivity.this, AddEvent.class);
+            intent.putExtra("name", event.name);
+            intent.putExtra("start", event.start);
+            intent.putExtra("dest", event.dest);
+            intent.putExtra("numPicker", event.numPicker);
+            intent.putExtra("datePicker", event.datePicker);
+            intent.putExtra("oneWay", event.oneWay);
+            startActivityForResult(intent, 1);
+        });
     }
 
     private TextView createColumn(String text, TableRow.LayoutParams lp) {
@@ -246,6 +278,7 @@ public class MainActivity extends AppCompatActivity {
         text.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
 
         TextView totalKms = createColumn(Integer.toString(totalKpy) + "\n", lp);
+        text.setMinLines(2);
         totalKms.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         totalKms.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
 
