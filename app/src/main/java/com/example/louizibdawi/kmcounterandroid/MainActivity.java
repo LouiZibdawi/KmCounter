@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private RadioButton kpw,kpm,kpy;
 
     private TableLayout tableLayout, finalRowTable;
+    private List<EventDb.EventRecord> events;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void displayEvents() {
-        List<EventDb.EventRecord> events = db.getEvents();
+        events = db.getEvents();
         Collections.sort(events, new Comparator<EventDb.EventRecord>() {
 
             public int compare(EventDb.EventRecord o1, EventDb.EventRecord o2) {
@@ -233,15 +234,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void makeTextViewClickable(TextView textView, EventDb.EventRecord event) {
-        textView.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, AddEvent.class);
-            intent.putExtra("name", event.name);
-            intent.putExtra("start", event.start);
-            intent.putExtra("dest", event.dest);
-            intent.putExtra("numPicker", event.numPicker);
-            intent.putExtra("datePicker", event.datePicker);
-            intent.putExtra("oneWay", event.oneWay);
-            startActivityForResult(intent, 1);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, AddEvent.class);
+                intent.putExtra("name", event.name);
+                intent.putExtra("start", event.start);
+                intent.putExtra("dest", event.dest);
+                intent.putExtra("numPicker", event.numPicker);
+                intent.putExtra("datePicker", event.datePicker);
+                intent.putExtra("oneWay", event.oneWay);
+                MainActivity.this.startActivityForResult(intent, 1);
+            }
         });
     }
 

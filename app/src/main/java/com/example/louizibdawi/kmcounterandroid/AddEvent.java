@@ -79,11 +79,6 @@ public class AddEvent extends AppCompatActivity
         submit = (Button) findViewById(R.id.submit);
         swap = (ImageButton) findViewById(R.id.swapImageButton);
 
-        if(oneWay.isChecked())
-            oneWayValue = 1;
-        else
-            oneWayValue = 0;
-
         //Initializing database
         db = MyDb.getDB(this);
 
@@ -104,6 +99,11 @@ public class AddEvent extends AppCompatActivity
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                if(oneWay.isChecked())
+                    oneWayValue = 1;
+                else
+                    oneWayValue = 0;
                 
                 int errors = errorCheck();
 
@@ -143,6 +143,17 @@ public class AddEvent extends AppCompatActivity
 
         });
 
+        oneWay.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if(oneWay.isChecked())
+                    oneWay.setChecked(false);
+                else
+                    oneWay.setChecked(true);
+            }
+        });
+
     }
 
     private void getPassedInValues(Bundle savedInstanceState) {
@@ -154,6 +165,8 @@ public class AddEvent extends AppCompatActivity
                 destAddress.setText(extras.getString("dest"));
                 numPicker.setValue(extras.getInt("numPicker"));
                 datePicker.setValue(extras.getInt("datePicker"));
+                if(extras.getInt("oneWay") == 1)
+                    oneWay.setChecked(true);
             }
         } else {
             eventName.setText((String) savedInstanceState.getSerializable("name"));
@@ -161,6 +174,8 @@ public class AddEvent extends AppCompatActivity
             destAddress.setText((String) savedInstanceState.getSerializable("dest"));
             numPicker.setValue((int) savedInstanceState.getSerializable("numPicker"));
             datePicker.setValue((int) savedInstanceState.getSerializable("datePicker"));
+            if((int) savedInstanceState.getSerializable("oneWay") == 1)
+                oneWay.setChecked(true);
         }
     }
 
