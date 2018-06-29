@@ -145,26 +145,26 @@
             android:id="@+id/header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View Kilometers Per:"
+            android:text="@string/view_kilometers_by"
             android:textStyle="bold"
             android:textSize="20sp" />
 
         <RadioButton android:id="@+id/kpw"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Week"
+            android:text="@string/week"
             android:layout_weight="1"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton android:id="@+id/kpm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Month"
+            android:text="@string/month"
             android:layout_weight="1"
             android:onClick="onRadioButtonClicked"/>
         <RadioButton android:id="@+id/kpy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Year"
+            android:text="@string/year"
             android:layout_weight="1"
             android:onClick="onRadioButtonClicked"/>
     </RadioGroup>

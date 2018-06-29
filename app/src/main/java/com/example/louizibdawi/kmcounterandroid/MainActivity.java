@@ -52,6 +52,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        setTitle("KmCounter");
+
         tableLayout = (TableLayout) findViewById(R.id.table_body_layout);
         finalRowTable = (TableLayout) findViewById(R.id.table_final_row);
 
@@ -208,15 +210,8 @@ public class MainActivity extends AppCompatActivity {
         TextView name = createColumn(event.name, lp);
         TextView start = createColumn(event.start, lp);
         TextView end = createColumn(event.dest, lp);
-        TextView kpt = createColumn(Integer.toString(event.kpt), lp);
-        TextView kms = createColumn(Integer.toString(totalKms), lp);
-
-        //Adding link to textviews
-        makeTextViewClickable(name, event);
-        makeTextViewClickable(start, event);
-        makeTextViewClickable(end, event);
-        makeTextViewClickable(kpt, event);
-        makeTextViewClickable(kms, event);
+        TextView kpt = createColumn(Integer.toString(event.kpt) +"km", lp);
+        TextView kms = createColumn(Integer.toString(totalKms) + "km", lp);
 
         //Adding columns to row
         tr.addView(name);
@@ -224,6 +219,9 @@ public class MainActivity extends AppCompatActivity {
         tr.addView(end);
         tr.addView(kpt);
         tr.addView(kms);
+
+        //Adding link to full table row
+        makeTableRowClickable(tr, event);
 
         //If even number event
         if(numEvents % 2 == 0) {
@@ -233,8 +231,8 @@ public class MainActivity extends AppCompatActivity {
         this.tableLayout.addView(tr);
     }
 
-    private void makeTextViewClickable(TextView textView, EventDb.EventRecord event) {
-        textView.setOnClickListener(new View.OnClickListener() {
+    private void makeTableRowClickable(TableRow tr, EventDb.EventRecord event) {
+        tr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, AddEvent.class);
@@ -276,13 +274,24 @@ public class MainActivity extends AppCompatActivity {
         TextView blank2 = createColumn("",lp);
         TextView blank3 = createColumn("",lp);
 
-        TextView text = createColumn("Total Kilometers", lp);
-        text.setMinLines(2);
+        TextView text = null;
+        switch (kmView) {
+            case "kpw":
+                text = createColumn("Weekly Kms\n", lp);
+                break;
+            case "kpm":
+                text = createColumn("Monthly Kms\n", lp);
+                break;
+            case "kpy":
+                text = createColumn("Yearly Kms\n", lp);
+                break;
+        }
         text.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+        text.setLines(2);
         text.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
 
-        TextView totalKms = createColumn(Integer.toString(totalKpy) + "\n", lp);
-        text.setMinLines(2);
+        TextView totalKms = createColumn(Integer.toString(totalKpy) + "km\n", lp);
+        totalKms.setLines(2);
         totalKms.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
         totalKms.setBackground(ContextCompat.getDrawable(this, R.drawable.cell_background));
 

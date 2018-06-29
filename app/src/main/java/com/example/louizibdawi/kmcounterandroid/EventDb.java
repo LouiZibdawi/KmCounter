@@ -84,10 +84,29 @@ public class EventDb extends SQLiteOpenHelper {
         db.execSQL("create index ind_" + EVENT_NAME + " on " + EVENT_TABLE + " (" + EVENT_NAME + ")");
     }
 
-    public boolean removeEvent(String eventName) {
+    public Boolean checkForEvent(String eventName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = null;
+
+        String ifExists = "SELECT " +EVENT_NAME+ " FROM " +EVENT_TABLE+ " WHERE "
+                + EVENT_NAME + " = '" + eventName + "'";
+
+        cursor = db.rawQuery(ifExists, null);
+
+        if(cursor.getCount() > 0)
+            return true;
+        else
+            return false;
+    }
+
+    public void removeEvent(String eventName) {
         SQLiteDatabase db = this.getWritableDatabase();
 
-        return db.delete(EVENT_TABLE, EVENT_NAME + "=?", new String[]{eventName}) > 0;
+        String deleteEvent = "DELETE FROM " +EVENT_TABLE+ " WHERE " + EVENT_NAME + " = '" + eventName + "'";
+
+        System.out.println(deleteEvent);
+
+        db.execSQL(deleteEvent);
     }
 
     public void addEvent(String eventName, String start, String dest, int numPicker, int datePicker,

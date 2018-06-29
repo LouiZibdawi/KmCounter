@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -58,7 +59,7 @@ public class AddEvent extends AppCompatActivity
     private AutoCompleteTextView startAddress, destAddress;
     private NumberPicker numPicker, datePicker;
     private RadioButton oneWay;
-    private Button submit;
+    private Button submit, delete;
     private ImageButton swap;
     private TextInputLayout name_layout, start_layout, dest_layout;
 
@@ -70,6 +71,7 @@ public class AddEvent extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_event);
+        setTitle("Add Event");
 
         //Initializing page elements
         eventName = (EditText) findViewById(R.id.eventName);
@@ -77,6 +79,7 @@ public class AddEvent extends AppCompatActivity
         destAddress = (AutoCompleteTextView) findViewById(R.id.destAddress);
         oneWay = (RadioButton) findViewById(R.id.oneWay);
         submit = (Button) findViewById(R.id.submit);
+        delete = (Button) findViewById(R.id.delete);
         swap = (ImageButton) findViewById(R.id.swapImageButton);
 
         //Initializing database
@@ -95,15 +98,21 @@ public class AddEvent extends AppCompatActivity
 
         getPassedInValues(savedInstanceState);
 
+        Boolean exists = db.checkForEvent(eventName.getText().toString());
+
+        if(!exists) {
+            delete.setVisibility(View.GONE);
+        }
+
+        if(oneWay.isChecked())
+            oneWayValue = 1;
+        else
+            oneWayValue = 0;
+
         init();
 
         submit.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-
-                if(oneWay.isChecked())
-                    oneWayValue = 1;
-                else
-                    oneWayValue = 0;
                 
                 int errors = errorCheck();
 
@@ -144,13 +153,35 @@ public class AddEvent extends AppCompatActivity
         });
 
         oneWay.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
-                if(oneWay.isChecked())
+                //If it is checked when clicked, change value & uncheck
+                if (oneWayValue == 1) {
+                    oneWayValue = 0;
                     oneWay.setChecked(false);
-                else
+                    System.out.println("Checked to not checked");
+                }
+                else {
+                    oneWayValue = 1;
+                    System.out.println("Not checked to checked");
                     oneWay.setChecked(true);
+                }
+            }
+        });
+
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Boolean exists = db.checkForEvent(eventName.getText().toString());
+
+                if(exists)
+                    db.removeEvent(eventName.getText().toString());
+                else {
+                    Toast.makeText(AddEvent.this, "Event does not exist yet!",
+                            Toast.LENGTH_LONG).show();
+                }
+                setResult(RESULT_OK, null);
+                finish();
             }
         });
 
